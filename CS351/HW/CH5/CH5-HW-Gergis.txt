@@ -1,0 +1,149 @@
+2. The higher the forkpercentage, the longer and "danglier" the tree will look, with many more leaves
+
+3. Yes, looking at the tree, you can see when a new fork was created, exited, etc
+                           Process Tree:
+                               a
+
+Action?
+                               a
+                               └── b
+Action?
+                               a
+Action?
+                               a
+                               └── c
+Action?
+                               a
+Action?
+                               a
+                               └── d
+
+4. When a parent process exits, all the children of C are reparented to A or in a unix system init, instead of 
+becoming children of B which was C's parent process. Using the R flag reparents the children to B
+
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b forks c
+                               a
+                               └── b
+                                   └── c
+Action: c forks d
+                               a
+                               └── b
+                                   └── c
+                                       └── d
+Action: c forks e
+                               a
+                               └── b
+                                   └── c
+                                       ├── d
+                                       └── e
+Action: c EXITS
+                               a
+                               ├── b
+                               ├── d
+                               └── e
+
+                           Process Tree:
+                               a
+
+Action: a forks b
+                               a
+                               └── b
+Action: b forks c
+                               a
+                               └── b
+                                   └── c
+Action: c forks d
+                               a
+                               └── b
+                                   └── c
+                                       └── d
+Action: c forks e
+                               a
+                               └── b
+                                   └── c
+                                       ├── d
+                                       └── e
+Action: c EXITS
+                               a
+                               └── b
+                                   ├── d
+                                   └── e
+
+5.
+MY TREE:
+a 
+  -b
+a 
+  -c
+    -d
+  -e
+                           Process Tree:
+                               a
+
+Action: a forks b
+Action: b EXITS
+Action: a forks c
+Action: c forks d
+Action: a forks e
+
+Tree 2:
+a
+  -b 
+  -c 
+    -d
+  -e 
+
+a 
+  -b 
+  -d
+  -e
+                             Process Tree:
+                               a
+
+Action: a forks b
+Action: a forks c
+Action: c forks d
+Action: a forks e
+Action: c EXITS
+
+                        Final Process Tree?
+
+6.
+
+Action: a forks b
+Action: a forks c 
+Action: c forks d 
+Action: d forks e 
+Action: d exits
+
+                        Final Process Tree:
+                               a
+                               ├── b
+                               ├── c
+                               └── e
+
+
+
+
+
+CODE Questions
+1. When the parent and the child both edit the same variable, the variable is copied and both changes are made and printed
+
+2. You cannot ensure a child runs before a parent without using wait.
+
+3. The different verisions of exec take different types of input like arrays, strings, and vectors, and different execs use PATH
+
+4. Wait returns the PID of the process that has been completed, if wait is called on a child it will return -1 indicating an error
+
+5.  waitpid is used when waiting on a specific child versus any child.
+
+6. closing stdout and then trying to print to it will result in the print silently failing
+
+7.
