@@ -32,7 +32,7 @@ int main()
         // char *const argv[] = { "ls", "-l", NULL };
         // execvp("ls", argv);
 
-        // execvpe (requires glibc 2.15 or later)
+        // execvpe 
         // char *const argv[] = { "ls", "-l", NULL };
         // char *const envp[] = { "PATH=/bin:/usr/bin", NULL };
         // execvpe("ls", argv, envp);
