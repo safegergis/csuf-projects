@@ -1,0 +1,30 @@
+1.
+Final statistics:
+  Job  0: startTime   0 - response   0 - turnaround 126
+  Job  1: startTime   0 - response  10 - turnaround  92
+
+  Avg  1: startTime n/a - response 5.00 - turnaround 109.00
+2.
+example 1: hree queues, time slice of 10ms
+
+example 2: Three queues, time slice of 10ms. allotment of 10ms
+
+example 3: Three queus, time slice of 10ms. allotment of 10ms. IO stay in same queue
+
+example 4: Three queues, time slice of 10ms. allotment of 10ms. IO stays in same queue. Boost all jobs every 100ms
+
+example 5: Three queues, time slice of 10ms. allotment of 10ms. IO doesnt stay in same queue. Boost all jobs every 100ms.
+
+example 6: Three queues, time slice of 10ms at highest queue and up to 40ms at lowest queue. IO doesnt stay in same queue. Boost all jobs every second.
+
+3. A multi level feedback queue scheduler that behaves like a round robin scheduler would have to have only 1 queue with a set time slice of 10ms.
+
+
+4. The workload would be 2 jobs, with 3 queues. The time slice is 10ms and the allotment is 30ms for all queues.
+Job 0 starts right away, runs for 180ms and uses i/o every 20ms
+Job 1 starts at 100ms and runs for 100ms and uses i/o every 50ms
+This will result in job 0 using 99% of cpu time 
+here is the simulator command
+./mlfq.py -j 2 -n 3 -q 10 -a 30 -S -l 0,180,20:100,100,50
+
+5. The boost time should be 200ms. if the highest quantum is 10ms, then in the worst case, the longest job will have to wait 200ms before being boosted and running for 10ms. 10ms/200ms = 0.05
