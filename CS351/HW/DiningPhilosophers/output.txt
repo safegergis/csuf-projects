@@ -1,0 +1,212 @@
+Safe Gergis
+
+C Solution with semaphores:
+P#0 THINKING.
+P#1 THINKING.
+P#2 THINKING.
+P#4 THINKING.
+P#3 THINKING.
+P#1 picked up right chopstick.
+P#1 picked up left chopstick.
+P#1 EATING.
+P#4 picked up left chopstick.
+P#4 picked up right chopstick.
+P#4 EATING.
+P#1 put down left chopstick.
+P#1 put down right chopstick.
+P#1 finished eating and is thinking again.
+P#1 THINKING.
+P#2 picked up left chopstick.
+P#2 picked up right chopstick.
+P#2 EATING.
+P#2 put down left chopstick.
+P#2 put down right chopstick.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#4 put down left chopstick.
+P#3 picked up right chopstick.
+P#3 picked up left chopstick.
+P#3 EATING.
+P#4 put down right chopstick.
+P#4 finished eating and is thinking again.
+P#4 THINKING.
+P#0 picked up left chopstick.
+P#0 picked up right chopstick.
+P#0 EATING.
+P#3 put down left chopstick.
+P#3 put down right chopstick.
+P#3 finished eating and is thinking again.
+P#3 THINKING.
+P#1 picked up right chopstick.
+P#3 picked up right chopstick.
+P#3 picked up left chopstick.
+P#3 EATING.
+P#0 put down left chopstick.
+P#0 put down right chopstick.
+P#0 finished eating and is thinking again.
+P#0 THINKING.
+P#1 picked up left chopstick.
+P#1 EATING.
+P#0 picked up left chopstick.
+P#3 put down left chopstick.
+P#3 put down right chopstick.
+P#3 finished eating and is thinking again.
+P#3 THINKING.
+P#4 picked up left chopstick.
+P#1 put down left chopstick.
+P#0 picked up right chopstick.
+P#0 EATING.
+P#1 put down right chopstick.
+P#1 finished eating and is thinking again.
+P#1 THINKING.
+P#2 picked up left chopstick.
+P#2 picked up right chopstick.
+P#2 EATING.
+P#2 put down left chopstick.
+P#2 put down right chopstick.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#1 picked up right chopstick.
+P#0 put down left chopstick.
+P#4 picked up right chopstick.
+P#4 EATING.
+....
+
+C++ Solution with monitors:
+P#0 THINKING.
+P#1 THINKING.
+P#2 THINKING.
+P#3 THINKING.
+P#4 THINKING.
+P#0 picked up both chopsticks.
+P#0 EATING.
+P#3 picked up both chopsticks.
+P#3 EATING.
+P#0 put down chopsticks.
+P#0 finished eating and is thinking again.
+P#0 THINKING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#2 picked up both chopsticks.
+P#2 EATING.
+P#P#3 THINKING.
+4 picked up both chopsticks.
+P#4 EATING.
+P#2 put down chopsticks.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#1 picked up both chopsticks.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#1 EATING.
+P#4 THINKING.
+P#3 picked up both chopsticks.
+P#3 EATING.
+P#1 put down chopsticks.
+P#1 finished eating and is thinking again.
+P#0 picked up both chopsticks.
+P#0 EATING.
+P#1 THINKING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#P#3 THINKING.
+2 picked up both chopsticks.
+P#2 EATING.
+P#0 put down chopsticks.
+P#0 finished eating and is thinking again.
+P#2 put down chopsticks.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#0 THINKING.
+P#4 picked up both chopsticks.
+P#4 EATING.
+P#1 picked up both chopsticks.
+P#1 EATING.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#4 THINKING.
+P#3 picked up both chopsticks.
+P#3 EATING.
+P#1 put down chopsticks.
+P#1 finished eating and is thinking again.
+P#1 THINKING.
+P#0 picked up both chopsticks.
+P#0 EATING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#0 put down chopsticks.
+P#0 finished eating and is thinking again.
+P#3 THINKING.
+P#1 picked up both chopsticks.
+P#0 THINKING.
+P#1 EATING.
+P#4 picked up both chopsticks.
+P#4 EATING.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#4 THINKING.
+P#3 picked up both chopsticks.
+P#3 EATING.
+P#1 put down chopsticks.
+P#1 finished eating and is thinking again.
+P#1 THINKING.
+P#0 picked up both chopsticks.
+P#0 EATING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#3 THINKING.
+P#2 picked up both chopsticks.
+P#2 EATING.
+P#0 put down chopsticks.
+P#0 finished eating and is thinking again.
+P#0 THINKING.
+P#4 picked up both chopsticks.
+P#4 EATING.
+P#2 put down chopsticks.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#1 picked up both chopsticks.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#1 EATING.
+P#4 THINKING.
+P#3 picked up both chopsticks.
+P#3 EATING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#4 picked up both chopsticks.
+P#3 THINKING.
+P#1 put down chopsticks.
+P#1 finished eating and is thinking again.
+P#4 EATING.
+P#1 THINKING.
+P#2 picked up both chopsticks.
+P#2 EATING.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#2 put down chopsticks.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#3 picked up both chopsticks.
+P#4 THINKING.
+P#3 EATING.
+P#0 picked up both chopsticks.
+P#0 EATING.
+P#3 put down chopsticks.
+P#3 finished eating and is thinking again.
+P#3 THINKING.
+P#2 picked up both chopsticks.
+P#2 EATING.
+P#0 put down chopsticks.
+P#0 finished eating and is thinking again.
+P#0 THINKING.
+P#4 picked up both chopsticks.
+P#4 EATING.
+P#2 put down chopsticks.
+P#2 finished eating and is thinking again.
+P#2 THINKING.
+P#1 picked up both chopsticks.
+P#1 EATING.
+P#4 put down chopsticks.
+P#4 finished eating and is thinking again.
+P#4 THINKING.
