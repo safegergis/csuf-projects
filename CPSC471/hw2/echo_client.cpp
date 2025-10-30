@@ -56,28 +56,46 @@ public:
         return true;
     }
 
-    void receiveMessageLog() {
-        char buffer[4096];
+    void receiveInitialData() {
+        char buffer[8192];
         memset(buffer, 0, sizeof(buffer));
 
+        int totalReceived = 0;
         int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
         if (bytesReceived > 0) {
+            totalReceived = bytesReceived;
+        }
+
+        usleep(100000);
+
+        bytesReceived = recv(clientSocket, buffer + totalReceived, sizeof(buffer) - totalReceived - 1, MSG_DONTWAIT);
+        if (bytesReceived > 0) {
+            totalReceived += bytesReceived;
+        }
+
+        std::string data(buffer, totalReceived);
+
+        size_t clientListPos = data.find("Currently connected clients:");
+
+        if (clientListPos != std::string::npos) {
+            std::string messageLog = data.substr(0, clientListPos);
+            std::string clientList = data.substr(clientListPos);
+
+            if (messageLog.empty() || messageLog[0] == '\0') {
+                std::cout << "No prior message log from the server." << std::endl;
+            } else {
+                std::cout << "Client received message log:" << std::endl;
+                std::cout << messageLog;
+            }
+
+            std::cout << clientList;
+        } else {
             if (buffer[0] == '\0') {
                 std::cout << "No prior message log from the server." << std::endl;
             } else {
                 std::cout << "Client received message log:" << std::endl;
-                std::cout << buffer;
+                std::cout << data;
             }
-        }
-    }
-
-    void receiveClientList() {
-        char buffer[4096];
-        memset(buffer, 0, sizeof(buffer));
-
-        int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-        if (bytesReceived > 0) {
-            std::cout << buffer;
         }
     }
 
@@ -112,8 +130,7 @@ int main(int argc, char* argv[]) {
     client.getServerInfo(argc, argv);
 
     if (client.connectToServer()) {
-        client.receiveMessageLog();
-        client.receiveClientList();
+        client.receiveInitialData();
         client.startMessaging();
     }
 
