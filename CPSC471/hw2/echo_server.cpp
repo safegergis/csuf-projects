@@ -7,10 +7,21 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <thread>
+#include <mutex>
+#include <algorithm>
 
 class EchoServer {
 private:
+    struct ClientInfo {
+        int socket;
+        std::string ip;
+    };
+
     std::vector<std::pair<std::string, std::string>> messageLog;
+    std::mutex messageLogMutex;
+    std::vector<ClientInfo> connectedClients;
+    std::mutex clientsMutex;
     int serverSocket;
     int port;
     std::string serverIP;
@@ -91,23 +102,60 @@ public:
             std::string clientIP = inet_ntoa(clientAddr.sin_addr);
             std::cout << "The client at " << clientIP << " has connected to the server" << std::endl;
 
-            handleClient(clientSocket, clientIP);
+            std::thread clientThread(&EchoServer::handleClient, this, clientSocket, clientIP);
+            clientThread.detach();
+        }
+    }
+
+    void broadcastToOthers(const std::string& message, int excludeSocket) {
+        std::lock_guard<std::mutex> lock(clientsMutex);
+        for (const auto& client : connectedClients) {
+            if (client.socket != excludeSocket) {
+                send(client.socket, message.c_str(), message.length(), 0);
+            }
+        }
+    }
+
+    void broadcastToAll(const std::string& message) {
+        std::lock_guard<std::mutex> lock(clientsMutex);
+        for (const auto& client : connectedClients) {
+            send(client.socket, message.c_str(), message.length(), 0);
         }
     }
 
     void handleClient(int clientSocket, const std::string& clientIP) {
-        if (messageLog.empty()) {
-            std::cout << "The server has no message log to send to this client" << std::endl;
-            char nullChar = '\0';
-            send(clientSocket, &nullChar, 1, 0);
-        } else {
-            std::cout << "The server sent the message log to this client" << std::endl;
-            std::string logData;
-            for (const auto& entry : messageLog) {
-                logData += entry.first + ": " + entry.second + "\n";
-            }
-            send(clientSocket, logData.c_str(), logData.length(), 0);
+        {
+            std::lock_guard<std::mutex> lock(clientsMutex);
+            connectedClients.push_back({clientSocket, clientIP});
         }
+
+        {
+            std::lock_guard<std::mutex> lock(messageLogMutex);
+            if (messageLog.empty()) {
+                std::cout << "The server has no message log to send to this client" << std::endl;
+                char nullChar = '\0';
+                send(clientSocket, &nullChar, 1, 0);
+            } else {
+                std::cout << "The server sent the message log to this client" << std::endl;
+                std::string logData;
+                for (const auto& entry : messageLog) {
+                    logData += entry.first + ": " + entry.second + "\n";
+                }
+                send(clientSocket, logData.c_str(), logData.length(), 0);
+            }
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(clientsMutex);
+            std::string clientList = "Currently connected clients:\n";
+            for (const auto& client : connectedClients) {
+                clientList += client.ip + "\n";
+            }
+            send(clientSocket, clientList.c_str(), clientList.length(), 0);
+        }
+
+        std::string connectMsg = "Client " + clientIP + " has connected to the server\n";
+        broadcastToOthers(connectMsg, clientSocket);
 
         char buffer[1024];
         while (true) {
@@ -126,10 +174,32 @@ public:
             }
 
             std::cout << "Client " << clientIP << " sent: \"" << message << "\"" << std::endl;
-            messageLog.push_back({clientIP, message});
+
+            {
+                std::lock_guard<std::mutex> lock(messageLogMutex);
+                messageLog.push_back({clientIP, message});
+            }
+
+            std::string broadcastMsg = clientIP + ": " + message + "\n";
+            broadcastToOthers(broadcastMsg, clientSocket);
+        }
+
+        {
+            std::lock_guard<std::mutex> lock(clientsMutex);
+            connectedClients.erase(
+                std::remove_if(connectedClients.begin(), connectedClients.end(),
+                    [clientSocket](const ClientInfo& client) {
+                        return client.socket == clientSocket;
+                    }),
+                connectedClients.end()
+            );
         }
 
         std::cout << "The client at " << clientIP << " has disconnected from the server" << std::endl;
+
+        std::string disconnectMsg = "Client " + clientIP + " has disconnected from the server\n";
+        broadcastToAll(disconnectMsg);
+
         close(clientSocket);
     }
 
