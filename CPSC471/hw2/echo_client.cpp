@@ -71,6 +71,16 @@ public:
         }
     }
 
+    void receiveClientList() {
+        char buffer[4096];
+        memset(buffer, 0, sizeof(buffer));
+
+        int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+        if (bytesReceived > 0) {
+            std::cout << buffer;
+        }
+    }
+
     void startMessaging() {
         std::string message;
 
@@ -103,6 +113,7 @@ int main(int argc, char* argv[]) {
 
     if (client.connectToServer()) {
         client.receiveMessageLog();
+        client.receiveClientList();
         client.startMessaging();
     }
 
