@@ -6,15 +6,18 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
+#include <thread>
+#include <atomic>
 
 class EchoClient {
 private:
     int clientSocket;
     std::string serverIP;
     int serverPort;
+    std::atomic<bool> running;
 
 public:
-    EchoClient() : clientSocket(-1), serverPort(0) {}
+    EchoClient() : clientSocket(-1), serverPort(0), running(false) {}
 
     void getServerInfo(int argc, char* argv[]) {
         if (argc >= 3) {
@@ -99,15 +102,34 @@ public:
         }
     }
 
+    void receiveMessages() {
+        char buffer[4096];
+        while (running) {
+            memset(buffer, 0, sizeof(buffer));
+            int bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+            if (bytesReceived > 0) {
+                std::cout << buffer << std::flush;
+            } else if (bytesReceived == 0) {
+                running = false;
+                break;
+            }
+        }
+    }
+
     void startMessaging() {
+        running = true;
+        std::thread receiverThread(&EchoClient::receiveMessages, this);
+        receiverThread.detach();
+
         std::string message;
 
-        while (true) {
+        while (running) {
             std::cout << "Enter message to send to server: ";
             std::getline(std::cin, message);
 
             if (message == "quit") {
                 send(clientSocket, message.c_str(), message.length(), 0);
+                running = false;
                 break;
             }
 
